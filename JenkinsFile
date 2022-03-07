@@ -1,0 +1,28 @@
+pipeline {
+    agent any
+
+    tools {
+        
+        maven 'M2_HOME'
+    }
+
+    stages {
+        stage('Test') {
+            steps {
+                git branch: 'main', url: 'https://github.com/AutomationPractiseTest/FirstAutomation.git'
+                script{
+                bat (/mvn clean test/)
+                }   
+            }
+
+            post {
+               
+                success 
+				{
+                    junit '**/target/surefire-reports/TEST-*.xml'
+                    archiveArtifacts 'target/*.jar'
+                }
+            }
+        }
+    }
+}
